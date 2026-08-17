@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { font-family: 'DM Sans', system-ui, sans-serif; color: #241F45; background: #F7F6FB; }
+.font-display { font-family: 'Poppins', sans-serif; }
+@keyframes ticker { 0% { transform: translateX(0);} 100% { transform: translateX(-50%);} }
+.ticker-track { animation: ticker 28s linear infinite; }
+@media (prefers-reduced-motion: reduce){ .ticker-track { animation: none; } }
+@keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+.lamp-live { animation: pulse-dot 1.6s ease-in-out infinite; }
