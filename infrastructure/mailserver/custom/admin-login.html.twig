@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mail - Acclaira{% endblock %}
+{% block superbody -%}
+
+    <nav class="navbar navbar-expand-md topnav color-top-border" style="border: none; box-shadow: none;"></nav>
+
+    <div class="container">
+        <div style="margin: auto; max-width: 440px; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-top: 30px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7.00005C4 6.44777 4.44772 6.00005 5 6.00005H19C19.5523 6.00005 20 6.44777 20 7.00005V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7.00005Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 7L12 12.5L20 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2 style="margin: 0; font-weight: 700; font-size: 22px; color: #0f172a; letter-spacing: -0.02em;">Mailbox Login</h2>
+                <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Acclaira Administration &bull; <span style="color: #3b82f6; font-weight: 500;">mail.acclaira.com</span></p>
+            </div>
+
+            <form action="" method="post">
+
+                {% if error %}
+                    <div class="alert alert-danger" style="border-radius: 8px; font-size: 13px;"><span
+                                class="glyphicon glyphicon-warning-sign"></span> {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="alert alert-info" style="border-radius: 8px; font-size: 13px;">
+                        You are logged in as {{ app.user.username }}, <a href="{{ path('logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="email" style="font-weight: 600; font-size: 13px; color: #334155;">{{ 'login.email.label'|trans }}</label>
+                    <input autofocus="autofocus" class="form-control" type="email" id="email" name="email"
+                           value="{{ last_username }}" style="height: 42px; border-radius: 8px;" placeholder="mail@acclaira.com"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" style="font-weight: 600; font-size: 13px; color: #334155;">{{ 'login.password.label'|trans }}</label>
+                    <input class="form-control" type="password" id="password" name="password" style="height: 42px; border-radius: 8px;"/>
+                </div>
+
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-sm-6 form-group" style="padding-top: 0.6rem;">
+                        <label style="font-weight: normal; font-size: 13px; color: #64748b; vertical-align: middle;"><input type="checkbox"
+                                                                                           name="_remember_me"
+                                                                                           checked="checked"
+                                                                                           style="vertical-align: sub;">
+                            &nbsp;{{ 'login.remember_me.label'|trans }}</label>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <button type="submit" style="background: #2563eb; color: #fff; border: none; border-radius: 8px; padding: 9px 20px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s;">{{ 'login.sign_in.button'|trans }}</button>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+
+            </form>
+            <hr style="margin: 20px 0; border-color: #f1f5f9;"/>
+
+            <div class="text-center">
+                <button id="login-passkey" class="btn btn-passkey" style="border-radius: 8px; font-size: 13px;"><img style="width: 16px"
+                                                                              src="{{ asset('resources/passkeys.svg') }}"/> {{ 'login.sign_in.passkey_button'|trans }}
+                </button>
+                <div style="margin-top: 15px;">
+                    <a href="/webmail" style="color: #2563eb; font-size: 13px; font-weight: 500; text-decoration: none;">&larr; Return to Webmail</a>
+                </div>
+
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #f1f5f9; color: #64748b; font-size: 12px; font-weight: 500;">
+                    &copy; Copyright PR MEDIA LLC. All rights reserved.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        if (window.location.hash) {
+            var hash = window.location.hash.substring(1).split(';');
+            document.getElementById('email').value = hash[0];
+            document.getElementById('password').value = hash[1];
+        }
+
+        var element = document.getElementById('email');
+        element.onkeypress = function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            var char = String.fromCharCode(key);
+            if (char.match(/[\s]+/ig)) {
+                e.preventDefault();
+            }
+        }
+    </script>
+    <script>
+        document.getElementById('login-passkey').addEventListener('click', async () => {
+            try {
+                const startResponse = await fetch('{{ path('webauthn_login_start') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const options = await startResponse.json();
+
+                const publicKey = {
+                    challenge: Uint8Array.from(atob(options.challenge), c => c.charCodeAt(0)),
+                    rpId: window.location.hostname,
+                    timeout: 60000,
+                    userVerification: 'preferred'
+                };
+
+                const credential = await navigator.credentials.get({ publicKey });
+
+                const credentialData = {
+                    id: credential.id,
+                    type: credential.type,
+                    response: {
+                        authenticatorData: btoa(String.fromCharCode(...new Uint8Array(credential.response.authenticatorData))),
+                        clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(credential.response.clientDataJSON))),
+                        signature: btoa(String.fromCharCode(...new Uint8Array(credential.response.signature)))
+                    }
+                };
+
+                const finishResponse = await fetch('{{ path('webauthn_login_finish') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(credentialData)
+                });
+
+                const result = await finishResponse.json();
+
+                if (result.ok) {
+                    location.href = result.redirect;
+                } else {
+                    alert('Error: ' + result.error);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Passkey login error: ' + error.message);
+            }
+        });
+    </script>
+{% endblock %}

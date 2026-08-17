@@ -1,0 +1,30 @@
+<roundcube:include file="includes/layout.html" />
+
+<h1 class="voice">Mail - Acclaira <roundcube:label name="login" /></h1>
+
+<div id="layout-content" class="selected no-navbar" role="main">
+	<div style="text-align: center; margin-bottom: 24px; padding-top: 10px;">
+		<div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+			<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M4 7.00005C4 6.44777 4.44772 6.00005 5 6.00005H19C19.5523 6.00005 20 6.44777 20 7.00005V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7.00005Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M4 7L12 12.5L20 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</div>
+		<h2 style="margin: 0; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">Mailbox Login</h2>
+		<p style="color: #64748b; font-size: 13px; margin-top: 4px;">Mail - Acclaira &bull; <span style="color: #3b82f6; font-weight: 500;">mail.acclaira.com</span></p>
+	</div>
+	<roundcube:form id="login-form" name="login-form" method="post" class="propform">
+	<roundcube:object name="loginform" form="login-form" size="40" submit=true class="form-control" />
+		<div id="login-footer" role="contentinfo" style="line-height: 1.8; margin-top: 15px;">
+			<a href="../../../../admin/" style="color: #2563eb; font-weight: 500; font-size: 13px; text-decoration: none;">Administration</a>
+			<roundcube:container name="loginfooter" id="login-footer" />
+			<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 12px; color: #64748b; font-weight: 500;">Copyright &copy; PR MEDIA LLC. All rights reserved.</div>
+		</div>
+	</form>
+</div>
+
+<noscript>
+	<p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p>
+</noscript>
+
+<roundcube:include file="includes/footer.html" />
