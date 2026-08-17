@@ -1,0 +1,31 @@
+http:
+  routers:
+    acclaira-http:
+      rule: "Host(`acclaira.com`) || Host(`www.acclaira.com`)"
+      entryPoints:
+        - http
+      middlewares:
+        - redirect-to-https@file
+      service: acclaira-service
+
+    acclaira-https:
+      rule: "Host(`acclaira.com`)"
+      entryPoints:
+        - https
+      tls:
+        certResolver: letsencrypt
+      service: acclaira-service
+
+    acclaira-www-https:
+      rule: "Host(`www.acclaira.com`)"
+      entryPoints:
+        - https
+      tls:
+        certResolver: letsencrypt
+      service: acclaira-service
+
+  services:
+    acclaira-service:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.1:3000"
